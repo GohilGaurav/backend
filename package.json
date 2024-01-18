@@ -1,0 +1,16 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js"
+  },
+  "author": "Gaurav Gohil",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^3.0.3",
+    "prettier": "^3.2.4"
+  }
+}
