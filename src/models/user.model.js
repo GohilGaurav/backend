@@ -36,7 +36,7 @@ const userSchema = Schema(
       type: String,
       required: [true, "Password is required"],
     },
-    refresgToken: {
+    refreshToken: {
       type: String,
     },
     watchHistory: [
@@ -51,7 +51,7 @@ const userSchema = Schema(
 
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    this.password = bcrypt.hash(
+    this.password = await bcrypt.hash(
       this.password,
       Number(process.env.PASS_SALT_ROUNDS)
     );
