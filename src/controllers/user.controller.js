@@ -5,10 +5,16 @@ import { deleteOnCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import mongoose, { Schema } from "mongoose";
+import { Video } from "../models/video.model.js";
 
 const cookieOptions = {
   httpOnly: true,
   secure: true,
+};
+
+const isObectIdValid = (id) => {
+  const ObjectId = mongoose.Types.ObjectId;
+  return ObjectId.isValid(id);
 };
 
 const generateAcessAndRefreshToken = async (userId) => {
@@ -471,6 +477,32 @@ const getUserWatchHistory = asyncHandler(async (req, res) => {
     );
 });
 
+const addVideoToWatchHistory = asyncHandler(async (req, res) => {
+  const { videoID } = req.params;
+
+  if (!isObectIdValid(videoID)) {
+    throw new ApiError(400, "Invalid video id");
+  }
+
+  const video = await Video.findById(videoID);
+
+  if (!video) {
+    throw new ApiError(400, "video not found");
+  }
+
+  const user = await User.findById(req.user._id);
+
+  user.watchHistory.push(videoID);
+  await user.save();
+
+  video.views = video.views + 1;
+  await video.save();
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Video added to watch history"));
+});
+
 export {
   registerUser,
   loginUser,
@@ -483,4 +515,5 @@ export {
   getCurrentUser,
   getChannelProfile,
   getUserWatchHistory,
+  addVideoToWatchHistory,
 };

@@ -11,6 +11,7 @@ import {
   getCurrentUser,
   getChannelProfile,
   getUserWatchHistory,
+  addVideoToWatchHistory,
 } from "../controllers/user.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -42,5 +43,6 @@ router
 router.route("/getcurrentuser").get(verifyJWT, getCurrentUser);
 router.route("/channel/:username").get(verifyJWT, getChannelProfile);
 router.route("/watch-history").get(verifyJWT, getUserWatchHistory);
+router.route("/video/:videoID").patch(verifyJWT, addVideoToWatchHistory);
 
 export default router;
